@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "BiLines",
+  "version": "1.0",
+  "description": "A Chrome extension that draws attention to the under-representation of women journalists/writers in major publications by pulling up a mock “paywall” after reading 10 articles in a row written by men. - By Kira Simon-Kennedy and Melanie Hoff",
+  "permissions": [
+        "https://www.gender-api.com/*"
+    ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["jquery.js", "jquery-gender.js", "content.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "scripts": ["jquery.js", "jquery-gender.js", "background.js"]
+  }
+}

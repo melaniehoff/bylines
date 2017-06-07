@@ -4,17 +4,22 @@
   "version": "1.0",
   "description": "A Chrome extension that draws attention to the under-representation of women journalists/writers in major publications by pulling up a mock “paywall” after reading 10 articles in a row written by men. - By Kira Simon-Kennedy and Melanie Hoff",
   "permissions": [
-        "https://www.gender-api.com/*"
+        "https://www.gender-api.com/*","tabs", "*://www.nytimes.com/*","http://*/", "https://*/"
     ],
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": ["jquery-2.2.4.min.js", "jquery-gender.min.js", "content.js"],
+      "matches": ["<all_urls>"],
+      "js": ["jquery-2.2.4.min.js", "content.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["https://www.nytimes.com/*"],
+      "js": ["jquery-2.2.4.min.js", "jquery-gender.min.js", "content.js", "nytimes.js"],
       "run_at": "document_end"
     }
   ],
+
+
   "browser_action": {
     "default_icon": "icon.png"
   },

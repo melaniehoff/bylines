@@ -27,7 +27,6 @@ function grabBylines(){
 
 
 function fullNamesFunction(all) {
-    console.log("XXXXXXXXXXXXXXXXXXX");
     for (i = 0; i < all.length; i++) {
         //for everything in all, clean of timestamp and And and By using getFullNames
         //push each cleaned name into fullNames
@@ -35,8 +34,8 @@ function fullNamesFunction(all) {
     }
     //flatten getFullNames
     var merged = [].concat.apply([], fullNames);
-    console.log("sending this through getFirstNames vv");
-    console.log(merged);
+    // console.log("sending this through getFirstNames vv");
+    // console.log(merged);
     getFirstNames(merged);
 }
 
@@ -55,7 +54,7 @@ function getFullNames(byline) {
 }
 
 function getFirstNames(fullNames) {
-    console.log("_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_");
+    console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     console.log("There are this many names: " + fullNames.length);
     for (i = 0; i < fullNames.length; i++) {
         // console.log(i);

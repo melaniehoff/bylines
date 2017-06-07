@@ -1,8 +1,6 @@
-// This is the content script for the extension
-console.log("BiLines is running!");
 
 $( document ).ready(function() {
-console.log( "ready!" );
+console.log( "_______ BILINES : NYTIMES EDITION ______" );
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -117,35 +115,3 @@ function multipleGenderApi(firstNames){
 
 //doc ready closer
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//TO RUN WITH BUTTON:
-// Listen for messages
-// chrome.runtime.onMessage.addListener(receiver);
-
-// Handle the message
-// function receiver(request, sender, sendResponse) {
-//   // Now if the message matches "browser action"
-//   if (request.message === "browser action") {
-//     // Change the background color again
-//     var bylines = document.getElementsByTagName('p');
-//     for (var i = 0; i < bylines.length; i++) {
-//       bylines[i].style['background-color'] = '#F0C';
-//     }
-//     // Send a message back!
-//     chrome.runtime.sendMessage({ "message": "thank you" });
-//   }
-// }

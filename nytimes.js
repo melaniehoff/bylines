@@ -56,18 +56,13 @@ function getFullNames(byline) {
 function getFirstNames(fullNames) {
     console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     console.log("There are this many names: " + fullNames.length);
-    for (i = 0; i < fullNames.length; i++) {
-        // console.log(i);
-        // console.log(fullNames[i]);
 
-        //split at the space and push the first item into firstNames
-        var oneFirstName = fullNames[i].split(/ /)[0];
-    // --for calling multiple names at once(not good);
-        // firstNames.push(oneFirstName);
-        genderApi(oneFirstName);
-    }
-// --for calling multiple names at once(not good);
-    // multipleGenderApi(firstNames);
+
+    fullNames.forEach(function(item, index, array) {
+      var oneFirstName = item.split(/ /)[0];
+      genderApi(oneFirstName);
+    });
+
 }
 
 ///////////////////////////////////////////
@@ -79,9 +74,40 @@ function genderApi(oneFirstName){
 
     $.get("https://gender-api.com/get?key=sZckQBUyhnkEpllCjF&name=" + oneFirstName, function( data, status ) {
         console.log(">>>>>>>>>>>>API results for:  "+ oneFirstName);
-        console.log(data['gender']);
+        // console.log(data['gender']);
+        // console.log(data);
+        if (data['accuracy'] <= 89) {
+          console.log("Unsure of gender..............");
+        } else {
+
+          console.log(data['gender']);
+        }
+
     });
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // for calling multiple names at once(not good);
 function multipleGenderApi(firstNames){
@@ -96,8 +122,12 @@ function multipleGenderApi(firstNames){
       console.log( data );
     });
 }
-
-
+//     var genderApiClientKey = 'sZckQBUyhnkEpllCjF';
+// $(".byline").genderApi({key: genderApiClientKey}).on('gender-found', function(e, result) {
+//             if (result.accuracy >= 60) {
+//                 console.log('Gender found: ' + result.gender);
+//             }
+//         });
 
 
 

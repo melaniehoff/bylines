@@ -1,27 +1,39 @@
 // This is the background script for the extension
-var articles_by_men = 0;
-var articles_by_women = 0;
+var articles-by-men = 0;
+var articles-by-women = 0;
+var articles-by-unsure = 0;
 var articleCount = 0;
-
 
 // Listening for messages
 chrome.runtime.onMessage.addListener(receiver);
 
 function receiver(request, sender, sendResponse) {
+
   if (request.message === "man author") {
-    articles_by_men += 1;
-    console.log("articles_by_men: " + articles_by_men);
+    articles-by-men += 1;
+
+    chrome.storage.local.set({menCount: total-articles-by-men});
+    chrome.storage.local.set({menCount: articles-by-men});
+
+    console.log("articles-by-men: " + articles-by-men);
   }
 
   if (request.message === "woman author") {
-    articles_by_women += 1;
-    console.log("articles_by_women: " + articles_by_women);
+    articles-by-women += 1;
+    console.log("articles-by-women: " + articles-by-women);
   }
-  if (articles_by_men >= 3) {
-    console.log("SENDING PAYWALL");
-    chrome.tabs.sendMessage(tab.id, {"message": "paywall"});
+  if (request.message === "unsure of gender author") {
+    articles-by-unsure += 1;
+    console.log("articles-by-unsure: " + articles-by-unsure);
+  }
 
+  if (articles-by-men >= 3) {
+    console.log("SENDING PAYWALL");
+    chrome.tabs.sendMessage(sender.tab.id, {"message": "paywall"});
+    //resets here:
+    articles-by-men = 0;
   }
+
 }
 
 chrome.runtime.onMessage.addListener(receiver2);
@@ -33,6 +45,13 @@ function receiver2(request, sender, sendResponse) {
   }
 
 }
+
+
+
+
+
+
+
 
 
 // A listener for when the user clicks on the extension button

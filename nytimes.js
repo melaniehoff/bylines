@@ -1,7 +1,6 @@
 var firstNames = [];
 var fullNamesLength = 0;
 
-
 var maleHomePageCount = 0;
 var femaleHomePageCount = 0;
 var unsureHomePageCount = 0;
@@ -9,7 +8,7 @@ var unsureHomePageCount = 0;
 
 $(document).ready(function() {
 
-  if (document.location.href == "https://www.nytimes.com/" || document.location.href.startsWith("https://www.nytimes.com/?W")) {
+  if (document.location.href == "https://www.nytimes.com/" || document.location.href.startsWith("https://www.nytimes.com/?W") || document.location.href.startsWith("https://www.nytimes.com/section")) {
     console.log("NYT Homepage");
     homePage();
   } else if (document.location.href.startsWith("https://www.nytimes.com/20")) {
@@ -19,6 +18,105 @@ $(document).ready(function() {
 
   //doc ready closer
 });
+
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+
+function nytArticle() {
+
+    console.log("_______ BYLINES : NYTIMES ARTICLE ______");
+
+    chrome.runtime.sendMessage({
+      "message": "article"
+    });
+
+    //gets all nyt bylines by class
+    function grabBylines() {
+      var bylines = $(".byline-author");
+      //highlights them
+      for (var i = 0; i < bylines.length; i++) {
+        bylines[i].style['background-color'] = '#99fff0';
+      }
+
+      //puts contents into array
+      var all = bylines.map(function() {
+        return this.innerHTML;
+      }).get();
+
+      return all;
+      console.log(all);
+    }
+
+    function getFirstNames(fullNames) {
+      console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+      console.log("There are this many names: " + fullNames.length);
+      fullNamesLength = fullNames.length;
+
+      returnedAllFulllNames.forEach(function(item, index, array) {
+        var oneFirstName = item.split(/ /)[0];
+        genderApi(oneFirstName);
+      });
+    }
+
+    ///////////////////////////////////////////
+    ///////////////////////////////////////////
+    // https://gender-api.com/get?key=sZckQBUyhnkEpllCjF&name=Anna;Jack;Stephen
+
+
+    function genderApi(oneFirstName) {
+      $.get("https://gender-api.com/get?key=sZckQBUyhnkEpllCjF&name=" + oneFirstName, function(data, status) {
+        console.log(">>>>>>>>>>>>API results for:  " + oneFirstName);
+        // console.log(data['gender']);
+        // console.log(data);
+        if (data['accuracy'] <= 89) {
+          console.log("Unsure of gender..............");
+          chrome.runtime.sendMessage({
+            "message": "unsure of gender author"
+          });
+        } else {
+          console.log(data['gender']);
+          if (data['gender'] == "male") {
+            chrome.runtime.sendMessage({
+              "message": "man author"
+            });
+          } else {
+            chrome.runtime.sendMessage({
+              "message": "woman author"
+            });
+          }
+        }
+      });
+
+    }
+
+  var returnedAllFulllNames = grabBylines();
+  var getEachFirstName = getFirstNames(returnedAllFulllNames);
+// getFirstNames(all);
+
+
+
+  //nytArticle closer
+}
+
+
+
+
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////      /////////////////////////////////////////////////
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////      /////////////////////////////////////////////////
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////      /////////////////////////////////////////////////
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////      /////////////////////////////////////////////////
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////      /////////////////////////////////////////////////
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+
+
 
 
 function homePage() {
@@ -59,14 +157,14 @@ function homePage() {
 
   function getFullNames(byline) {
     var timestampRegex = /<.*$/;
-    var without_timestamp_by = byline.replace(timestampRegex, "").slice(3).slice(0, -1);
+    var without-timestamp-by = byline.replace(timestampRegex, "").slice(3).slice(0, -1);
 
 
     var andExpr = / and /;
-    if (without_timestamp_by.search(andExpr) == -1) {
-      return [without_timestamp_by];
+    if (without-timestamp-by.search(andExpr) == -1) {
+      return [without-timestamp-by];
     } else {
-      return without_timestamp_by.split(/, | and /);
+      return without-timestamp-by.split(/, | and /);
     }
 
   }
@@ -79,8 +177,7 @@ function homePage() {
     fullNames.forEach(function(item, index, array) {
       var oneFirstName = item.split(/ /)[0];
       genderApi(oneFirstName);
-
-      console.log("&&&&&&&&&&&&&&&&&" + fullNames);
+      // console.log("XXXXXXXXXXX " + fullNames);
     });
   }
 
@@ -107,6 +204,7 @@ function homePage() {
           // console.log("femaleHomePageCount === " + femaleHomePageCount)
         }
       }
+      homepageTally();
     });
   }
 
@@ -115,7 +213,7 @@ function homePage() {
     // console.log("(((((((((((((((((((())))))))))))))))))))");
     //         console.log("(((((((((((((((((((())))))))))))))))))))");
     //                 console.log("(((((((((((((((((((())))))))))))))))))))");
-    console.log(">>> Out of " + totalHomePageCount + " authors, " + maleHomePageCount + " are men and " + femaleHomePageCount + " are women.");
+    console.log(">>> Out of " + (femaleHomePageCount+maleHomePageCount) + " authors, " + maleHomePageCount + " are men and " + femaleHomePageCount + " are women.");
   }
 
 
@@ -123,101 +221,5 @@ function homePage() {
   var returnedAllNames = grabBylines();
   var fullNamesList = fullNamesFunction(returnedAllNames);
   getFirstNamesAndTally(fullNamesList);
-}
 
-
-
-
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////      /////////////////////////////////////////////////
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////      /////////////////////////////////////////////////
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////      /////////////////////////////////////////////////
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////      /////////////////////////////////////////////////
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////      /////////////////////////////////////////////////
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-function nytArticle() {
-
-
-  $(document).ready(function() {
-    console.log("_______ BILINES : NYTIMES ARTICLE ______");
-    /////////////////////////////////////////////////
-    /////////////////////////////////////////////////
-    /////////////////////////////////////////////////
-
-
-    grabBylines();
-    chrome.runtime.sendMessage({
-      "message": "article"
-    });
-
-    //gets all nyt bylines by class
-    function grabBylines() {
-      var bylines = $(".byline-author");
-      //highlights them
-      for (var i = 0; i < bylines.length; i++) {
-        bylines[i].style['background-color'] = '#99fff0';
-      }
-
-      //puts contents into array
-      var all = bylines.map(function() {
-        return this.innerHTML;
-      }).get();
-
-      getFirstNames(all);
-    }
-
-    function getFirstNames(fullNames) {
-      console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-      console.log("There are this many names: " + fullNames.length);
-      fullNamesLength = fullNames.length;
-
-      fullNames.forEach(function(item, index, array) {
-        var oneFirstName = item.split(/ /)[0];
-        genderApi(oneFirstName);
-      });
-    }
-
-    ///////////////////////////////////////////
-    ///////////////////////////////////////////
-    // https://gender-api.com/get?key=sZckQBUyhnkEpllCjF&name=Anna;Jack;Stephen
-
-
-    function genderApi(oneFirstName) {
-      $.get("https://gender-api.com/get?key=sZckQBUyhnkEpllCjF&name=" + oneFirstName, function(data, status) {
-        console.log(">>>>>>>>>>>>API results for:  " + oneFirstName);
-        // console.log(data['gender']);
-        // console.log(data);
-        if (data['accuracy'] <= 89) {
-          console.log("Unsure of gender..............");
-        } else {
-          console.log(data['gender']);
-          if (data['gender'] == "male") {
-            chrome.runtime.sendMessage({
-              "message": "man author"
-            });
-          } else {
-            chrome.runtime.sendMessage({
-              "message": "woman author"
-            });
-          }
-        }
-      });
-
-    }
-
-
-
-    //doc ready closer
-  });
-
-
-
-  //nytArticle closer
 }
